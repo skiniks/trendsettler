@@ -1,5 +1,7 @@
 # trendsettler
 
+![Trendsetter Screenshot](images/trendsettler.png)
+
 **trendsettler** is an AI-powered trading and trend analysis tool built on Node.js. It leverages real-time data, sophisticated trend analysis, and sentiment analysis using OpenAI's GPT-3.5 Turbo to provide insights into market trends and help make informed trading decisions.
 
 ## Features

@@ -33,8 +33,6 @@ BENZINGA_API_KEY = "your_benzinga_api_key"
 POLYGON_API_KEY = "your_polygon_api_key"
 ```
 
-Ensure these are added to your environment securely, ideally stored in an .env file or through your hosting provider's environment management system.
-
 ## Usage
 
 To start the application, run:

@@ -1,11 +1,10 @@
-export interface StockData {
-  date: number
-  open: number
-  high: number
-  low: number
-  close: number
-  adjClose: number
-  volume: number
+export interface DayData {
+  t: number // timestamp
+  o: number // open price
+  h: number // high price
+  l: number // low price
+  c: number // close price
+  v: number // volume
 }
 
 export interface BenzingaResponse {

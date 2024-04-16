@@ -1,11 +1,11 @@
-import type readline from 'node:readline/promises'
+import type { Interface as ReadLineInterface } from 'node:readline/promises'
 import chalk from 'chalk'
 import { analyzeSentiment } from '../services/sentiment'
 import { fetchHistoricalData, fetchXMLData } from '../utils/api'
 import { calculateEMA, decideAction } from '../core/analysis'
 import { BENZINGA_API_KEY } from '../config'
 
-export async function handleCli(rl: readline.Interface) {
+export async function handleCli(rl: ReadLineInterface) {
   try {
     const symbol = await rl.question(chalk.green('Enter the stock symbol: '))
     const purchasePriceInput = await rl.question(chalk.green(`Enter purchase price for ${symbol}: `))
@@ -19,7 +19,7 @@ export async function handleCli(rl: readline.Interface) {
     const endDate = new Date().toISOString().slice(0, 10)
 
     const historicalPricesData = await fetchHistoricalData(symbol, startDateFormatted, endDate)
-    const historicalPrices = historicalPricesData.map(day => day.close)
+    const historicalPrices = historicalPricesData.map((day: { close: number }) => day.close)
     const currentPrice = historicalPrices[historicalPrices.length - 1]
 
     const shortTermEMA = calculateEMA(historicalPrices, 50)
@@ -35,20 +35,18 @@ export async function handleCli(rl: readline.Interface) {
     const jsonData = await fetchXMLData(url)
     console.log(chalk.blue('='.repeat(50)))
     console.log('News Headlines and Ratings:')
-    const ratings = await Promise.all(jsonData.result.item.map(article => analyzeSentiment(article.title)))
-    ratings.forEach((rating, index) => {
+    const ratings = await Promise.all(jsonData.result.item.map((article: { title: string }) => analyzeSentiment(article.title)))
+    ratings.forEach((rating: number, index: number) => {
       const title = jsonData.result.item[index].title
       if (rating > 6)
         console.log(`- ${chalk.green(title)} [Rating: ${rating}]`)
-
       else if (rating < 4)
         console.log(`- ${chalk.red(title)} [Rating: ${rating}]`)
-
       else
         console.log(`- ${chalk.yellow(title)} [Rating: ${rating}]`)
     })
 
-    const averageRating = ratings.reduce((acc, val) => acc + val, 0) / ratings.length
+    const averageRating = ratings.reduce((acc: number, val: number) => acc + val, 0) / ratings.length
     const overallSentiment = averageRating >= 6 ? 'Positive' : averageRating <= 4 ? 'Negative' : 'Neutral'
     console.log(chalk.blue('='.repeat(50)))
     console.log(`Overall News Sentiment: ${overallSentiment} (Average Rating: ${averageRating.toFixed(2)})`)

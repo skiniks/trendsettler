@@ -1,7 +1,7 @@
 import type { Interface as ReadLineInterface } from 'node:readline/promises'
 import chalk from 'chalk'
 import { analyzeSentiment } from '../services/sentiment'
-import { fetchHistoricalData, fetchXMLData } from '../utils/api'
+import { fetchHistoricalData, fetchRealTimeData, fetchXMLData } from '../utils/api'
 import { calculateEMA, decideAction } from '../core/analysis'
 import { BENZINGA_API_KEY } from '../config'
 
@@ -13,6 +13,9 @@ export async function handleCli(rl: ReadLineInterface) {
     if (Number.isNaN(purchasePrice))
       throw new Error('Invalid input for purchase price')
 
+    const realTimePriceData = await fetchRealTimeData(symbol)
+    const currentPrice = realTimePriceData.price
+
     const startDate = new Date()
     startDate.setFullYear(startDate.getFullYear() - 1)
     const startDateFormatted = startDate.toISOString().slice(0, 10)
@@ -20,7 +23,6 @@ export async function handleCli(rl: ReadLineInterface) {
 
     const historicalPricesData = await fetchHistoricalData(symbol, startDateFormatted, endDate)
     const historicalPrices = historicalPricesData.map((day: { close: number }) => day.close)
-    const currentPrice = historicalPrices[historicalPrices.length - 1]
 
     const shortTermEMA = calculateEMA(historicalPrices, 50)
     const longTermEMA = calculateEMA(historicalPrices, 200)

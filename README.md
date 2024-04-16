@@ -13,7 +13,7 @@
 
 ## Dependencies
 
-To use **trendsettler**, you need a subscription to Polygon.io's Starter package, which provides access to real-time market data. Ensure you have this subscription and the necessary API keys from [Polygon.io](https://polygon.io/pricing), Benzinga, and OpenAI to fully utilize all features of the tool.
+To use **trendsettler**, you need a subscription to [Polygon.io's Starter package](https://polygon.io/pricing), which provides access to real-time market data. Ensure you have this subscription and the necessary API keys from Polygon.io, Benzinga, and OpenAI to fully utilize all features of the tool.
 
 ## Installation
 

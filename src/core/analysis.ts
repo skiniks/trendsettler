@@ -11,6 +11,19 @@ export function calculateEMA(data: number[], windowSize: number): number[] {
   return ema
 }
 
+export function determineTrend(shortTermEMA: number[], longTermEMA: number[]): string {
+  const lastShortTermEMA = shortTermEMA[shortTermEMA.length - 1]
+  const lastLongTermEMA = longTermEMA[longTermEMA.length - 1]
+  const isSignificantlyUptrending = lastShortTermEMA > lastLongTermEMA * 1.05
+  const isSignificantlyDowntrending = lastShortTermEMA < lastLongTermEMA * 0.95
+
+  if (isSignificantlyUptrending)
+    return 'Significantly Uptrend'
+  if (isSignificantlyDowntrending)
+    return 'Significantly Downtrend'
+  return lastShortTermEMA > lastLongTermEMA ? 'Uptrend' : 'Downtrend'
+}
+
 export function decideAction(purchasePrice: number, currentPrice: number, sentiment: number, trend: string): string {
   const profitOrLoss = ((currentPrice - purchasePrice) / purchasePrice) * 100
   let decision = `Hold. Your profit/loss would be ${profitOrLoss.toFixed(2)}%.`

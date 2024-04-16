@@ -2,7 +2,7 @@ import type { Interface as ReadLineInterface } from 'node:readline/promises'
 import chalk from 'chalk'
 import { analyzeSentiment } from '../services/sentiment'
 import { fetchHistoricalData, fetchRealTimeData, fetchXMLData } from '../utils/api'
-import { calculateEMA, decideAction } from '../core/analysis'
+import { calculateEMA, decideAction, determineTrend } from '../core/analysis'
 import { BENZINGA_API_KEY } from '../config'
 
 export async function handleCli(rl: ReadLineInterface) {
@@ -60,17 +60,4 @@ export async function handleCli(rl: ReadLineInterface) {
   catch (error) {
     console.error(chalk.red(`Error: ${error instanceof Error ? error.message : 'An unknown error occurred'}`))
   }
-}
-
-function determineTrend(shortTermEMA: number[], longTermEMA: number[]): string {
-  const lastShortTermEMA = shortTermEMA[shortTermEMA.length - 1]
-  const lastLongTermEMA = longTermEMA[longTermEMA.length - 1]
-  const isSignificantlyUptrending = lastShortTermEMA > lastLongTermEMA * 1.05
-  const isSignificantlyDowntrending = lastShortTermEMA < lastLongTermEMA * 0.95
-
-  if (isSignificantlyUptrending)
-    return 'Significantly Uptrend'
-  if (isSignificantlyDowntrending)
-    return 'Significantly Downtrend'
-  return lastShortTermEMA > lastLongTermEMA ? 'Uptrend' : 'Downtrend'
 }
